@@ -5,7 +5,11 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.ImageDecoder
+import android.graphics.Paint
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -40,7 +44,6 @@ abstract class ImageHelperActivity : AppCompatActivity() {
     lateinit var photoFile: File
 
 
-
     @SuppressLint("ObsoleteSdkInt")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,8 +60,6 @@ abstract class ImageHelperActivity : AppCompatActivity() {
                 requestPermissions(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 0)
             }
         }
-
-
 
 
     }
@@ -100,7 +101,7 @@ abstract class ImageHelperActivity : AppCompatActivity() {
             photoFile.mkdirs()
         }
         val name = SimpleDateFormat("yyyyMMdd_HHmm ss").format(System.currentTimeMillis())
-        val file = File(photoFile.path+File.separator+"$name")
+        val file = File(photoFile.path + File.separator + "$name")
         return file
     }
 
@@ -113,8 +114,8 @@ abstract class ImageHelperActivity : AppCompatActivity() {
                 binding.ivImage.setImageBitmap(bitmap)
                 runClassification(bitmap)
 
-            }else if (requestCode == REQUEST_CAPTURE_IMAGE){
-               val bitmap = BitmapFactory.decodeFile(photoFile.absolutePath)
+            } else if (requestCode == REQUEST_CAPTURE_IMAGE) {
+                val bitmap = BitmapFactory.decodeFile(photoFile.absolutePath)
                 binding.ivImage.setImageBitmap(bitmap)
                 runClassification(bitmap)
             }
@@ -140,11 +141,45 @@ abstract class ImageHelperActivity : AppCompatActivity() {
 
     abstract fun runClassification(bitmap: Bitmap)
 
-    fun getOutputTextView():TextView{
+    fun getOutputTextView(): TextView {
         return binding.tvOutput
     }
-    fun getImageView():ImageView{
+
+    fun getImageView(): ImageView {
         return binding.ivImage
+    }
+
+    fun drowDetectionResult(boxes: List<BoxWithLabel>, bitmap: Bitmap) {
+        val outputBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        val canvas = Canvas(outputBitmap)
+        val penRect = Paint()
+        penRect.color = Color.RED
+        penRect.style = Paint.Style.STROKE
+        penRect.strokeWidth = 8.0f
+
+        val penLabel = Paint()
+        penLabel.color = Color.YELLOW
+        penLabel.style = Paint.Style.FILL_AND_STROKE
+        penLabel.textSize = 80.0f
+
+        for (boxWithlabel in boxes) {
+            canvas.drawRect(boxWithlabel.rect, penRect)
+            val labelSize = Rect(0, 0, 0, 0)
+            penLabel.getTextBounds(boxWithlabel.label, 0, boxWithlabel.label.length, labelSize)
+
+            val frontSize: Float = penLabel.textSize * boxWithlabel.rect.width() / labelSize.width()
+            if (frontSize < penLabel.textSize) {
+                penLabel.textSize = frontSize
+            }
+
+            canvas.drawText(
+                boxWithlabel.label,
+                boxWithlabel.rect.left.toFloat(),
+                boxWithlabel.rect.top.toFloat()+labelSize.height().toFloat(),
+                penLabel
+            )
+        }
+        getImageView().setImageBitmap(outputBitmap)
     }
 
 }

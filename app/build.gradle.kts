@@ -50,4 +50,7 @@ dependencies {
 
     // custom imgae classification
     implementation("com.google.mlkit:image-labeling-custom:17.0.2")
+
+    // object detection
+    implementation ("com.google.mlkit:object-detection:17.0.0")
 }

@@ -18,6 +18,7 @@
             android:name=".Image.ImageClassificationActivity"
             android:exported="true" />
         <activity android:name=".Image.FlowerIdentificationActivity" />
+        <activity android:name=".Image.ObjectDetectionActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
