@@ -50,9 +50,6 @@ abstract class ImageHelperActivity : AppCompatActivity() {
         binding = ActivityImageHelperBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                 != android.content.pm.PackageManager.PERMISSION_GRANTED
@@ -60,7 +57,6 @@ abstract class ImageHelperActivity : AppCompatActivity() {
                 requestPermissions(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 0)
             }
         }
-
 
     }
 
@@ -84,15 +80,12 @@ abstract class ImageHelperActivity : AppCompatActivity() {
     fun onStartCamera(view: View) {
         // create file to share with camera
         photoFile = createPhotoFile()
-
         val fileUri = FileProvider.getUriForFile(this, "com.example.fileprovider", photoFile)
         // create an intent
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri)
         //startactivity for result
-
         startActivityForResult(intent, REQUEST_CAPTURE_IMAGE)
-
     }
 
     fun createPhotoFile(): File {

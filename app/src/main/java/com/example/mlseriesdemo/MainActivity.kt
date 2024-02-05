@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import com.example.mlseriesdemo.Image.FaceDetctionActivity
 import com.example.mlseriesdemo.Image.FlowerIdentificationActivity
 import com.example.mlseriesdemo.Image.ImageClassificationActivity
 import com.example.mlseriesdemo.Image.ObjectDetectionActivity
@@ -20,18 +21,25 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun onGotoImageActivity(view: View){
+    fun onGotoImageActivity(view: View) {
         val intent = Intent(this@MainActivity, ImageClassificationActivity::class.java)
         startActivity(intent)
 
 
     }
-    fun onGotoFlowerIdentification(view: View){
+
+    fun onGotoFlowerIdentification(view: View) {
         val intent = Intent(this@MainActivity, FlowerIdentificationActivity::class.java)
         startActivity(intent)
     }
-    fun onGotoObjectDetection(view: View){
+
+    fun onGotoObjectDetection(view: View) {
         val intent = Intent(this@MainActivity, ObjectDetectionActivity::class.java)
+        startActivity(intent)
+    }
+
+    fun onGotoFaceDetection(view: View) {
+        val intent = Intent(this@MainActivity, FaceDetctionActivity::class.java)
         startActivity(intent)
     }
 }
